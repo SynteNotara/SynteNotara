@@ -23,7 +23,7 @@ const Header = ({ user, setUser, onSearch, searchQuery }) => {
           <i className="fas fa-sticky-note text-white text-xl"></i>
         </div>
         {/* App title. */}
-        <h1 className="app-title">CollabNotes</h1>
+        <h1 className="app-title">SynteNotara</h1>
       </div>
       
       {/* Center section of the header, which holds the Search component. */}

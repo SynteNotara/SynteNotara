@@ -1,6 +1,6 @@
-# CollabNotes - Real-Time Collaborative Note-Taking App
+# SynteNotara - Real-Time Collaborative Note-Taking App
 
-A modern, full-stack MERN application that enables teams to collaborate on notes in real-time with powerful features like document history, sharing, and role-based access control.
+A modern, full-stack MERN application using React, Tailwind, node, Socket.io, etc that enables teams to collaborate on notes in real-time with powerful features like document history, sharing, and role-based access control.
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ A modern, full-stack MERN application that enables teams to collaborate on notes
 
 ## Overview
 
-CollabNotes is a comprehensive note-taking solution built with the MERN stack (MongoDB, Express.js, React, Node.js) that enables real-time collaboration between users. The application provides a seamless experience for teams to create, edit, and manage notes together with instant synchronization.
+SynteNotara is a comprehensive note-taking solution built with the MERN stack (MongoDB, Express.js, React, Node.js) that enables real-time collaboration between users. The application provides a seamless experience for teams to create, edit, and manage notes together with instant synchronization.
 
 ## Features
 
@@ -79,8 +79,8 @@ CollabNotes is a comprehensive note-taking solution built with the MERN stack (M
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Akmal-Ahmad/CollabNotes.git
-cd CollabNotes
+git clone https://github.com/Akmal-Ahmad/SynteNotara.git
+cd SynteNotara
 ```
 
 2. Install backend dependencies:
@@ -590,13 +590,13 @@ export default function NotesList({ token }) {
 ### Some Screenshots
 
 Landing Page Hero section :
-![Hero](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Hero%20Section.PNG?raw=true)
+![Hero](https://github.com/Akmal-Ahmad/SynteNotara/blob/main/ss/Hero%20Section.PNG?raw=true)
 
 Landing Page Features section :
-![Features](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Features.PNG?raw=true)
+![Features](https://github.com/Akmal-Ahmad/SynteNotara/blob/main/ss/Features.PNG?raw=true)
 
 Real-Time Collaboration :
-![Collaboration](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Collaboration.PNG?raw=true)
+![Collaboration](https://github.com/Akmal-Ahmad/SynteNotara/blob/main/ss/Collaboration.PNG?raw=true)
 
 Easily Add/Remove Collaborators :
-![Easy Management](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Manage.PNG?raw=true)
+![Easy Management](https://github.com/Akmal-Ahmad/SynteNotara/blob/main/ss/Manage.PNG?raw=true)
