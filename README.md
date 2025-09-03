@@ -350,6 +350,34 @@ module.exports = (err, req, res, next) => {
 };
 ```
 
+## Performance & Stability Optimizations
+
+- **Database Efficiency**
+
+  - Indexed frequently queried fields for faster data retrieval.
+  - Implemented selective data fetching to reduce payload size.
+  - Paginated notes for optimal load times on large datasets.
+
+- **Frontend Optimization**
+
+  - Used `React.memo`, `useMemo`, and lazy-loading to minimize unnecessary re-renders.
+  - Debounced auto-save and throttled API calls to reduce server load.
+
+- **Real-Time Collaboration**
+
+  - Socket.io rooms scoped per document to reduce network traffic.
+  - Efficient event handling for simultaneous edits.
+
+- **Exception Handling & Stability**
+
+  - Global error-handling middleware on backend.
+  - Graceful handling of socket disconnections and failed API calls.
+  - Input validation to prevent crashes on edge cases.
+  - Fallback UI and notifications for API failures.
+
+- **Testing**
+  - Manually tested edge cases: empty notes, large documents, simultaneous edits, and offline reconnect scenarios.
+
 ## Accessibility
 
 - **ARIA Labels** on inputs, buttons, and interactive components
@@ -380,6 +408,23 @@ describe("Auth API", () => {
   });
 });
 ```
+
+## Code Quality & Innovative Features
+
+- **Code Quality**
+
+  - Consistent folder structure and naming conventions.
+  - Clean, modular, and reusable React components.
+  - Backend code structured with proper MVC patterns.
+  - ESLint and Prettier applied for consistent formatting.
+  - Unit and integration tests added for critical functionalities.
+
+- **Innovative Features**
+  - Real-time collaborative editing with live updates.
+  - Version history and role-based access control.
+  - Dark mode toggle for improved UX.
+  - Offline note editing with automatic sync upon reconnect.
+  - Interactive animations for note changes and collaboration events.
 
 ## Architecture & Database Schema
 
