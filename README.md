@@ -13,6 +13,12 @@ A modern, full-stack MERN application that enables teams to collaborate on notes
 - [Real-Time Features](#real-time-features)
 - [Security](#security)
 - [Performance](#performance)
+- [Error Handling](#error-handling)
+- [Accessibility](#accessibility)
+- [Testing & CI/CD](#testing--cicd)
+- [Architecture & Database Schema](#-architecture--database-schema)
+- [Code Examples](#-code-examples)
+- [Screenshots & Demo](#screenshots--demo)
 
 ## Overview
 
@@ -181,10 +187,23 @@ The application uses Socket.io to enable real-time collaboration:
 
 **Socket Events:**
 
-- `join-note` - User joins a specific note room
-- `note-change` - Note content is updated
-- `note-update` - Broadcast changes to other users
-- `user-typing` - Show when users are actively editing
+```javascript
+// Client: join a note
+socket.emit("join-note", noteId);
+
+// Server: listen and join
+socket.on("join-note", (noteId) => {
+  socket.join(noteId);
+});
+
+// Client: send changes
+socket.emit("note-change", { noteId, title, content, userId });
+
+// Server: broadcast changes
+socket.on("note-change", (data) => {
+  socket.to(data.noteId).emit("note-update", data);
+});
+```
 
 ## Security
 
@@ -195,6 +214,32 @@ The application uses Socket.io to enable real-time collaboration:
 - **Authorization Middleware**: Role-based access control for all operations
 - **XSS Protection**: Input sanitization and secure rendering practices
 
+### Password Hashing Example
+
+```javascript
+const bcrypt = require("bcryptjs");
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+```
+
+### JWT Middleware Example
+
+```javascript
+const auth = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.userId).select("-password");
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Token is not valid" });
+  }
+};
+```
+
 ## Performance
 
 - **Database Optimization**: Indexed fields and efficient query design
@@ -202,3 +247,221 @@ The application uses Socket.io to enable real-time collaboration:
 - **Debounced Saving**: Auto-save with timeout to prevent excessive API calls
 - **Efficient Re-rendering**: Optimized React component structure
 - **Socket Room Management**: Targeted broadcasting to relevant users only
+
+## Error Handling
+
+- **Centralized Error Handler** in Express returns structured JSON error responses
+- **Fallback UI** in React for API failures with retry options
+- **Edge Case Coverage**: Handles empty notes, long content, expired JWT tokens, and network interruptions
+- **Logging**: Winston/Morgan used for backend logging, optional Sentry integration for error tracking
+
+### Error Handling Middleware Example
+
+```javascript
+module.exports = (err, req, res, next) => {
+  console.error(err.stack);
+  res
+    .status(500)
+    .json({ error: "Something went wrong, please try again later." });
+};
+```
+
+## Accessibility
+
+- **ARIA Labels** on inputs, buttons, and interactive components
+- **Keyboard Navigation** support across the app
+- **Dark Mode Toggle** and font size adjustments for readability
+- **High-Contrast Color Scheme** tested with Lighthouse for accessibility compliance
+
+## Testing & CI/CD
+
+- **Unit Tests**: Implemented with Jest (backend) and React Testing Library (frontend)
+- **Integration Tests** for authentication and collaboration features
+- **Continuous Integration**: GitHub Actions workflow for automated testing and linting on every commit
+- **Test Coverage Badge** displayed in README
+
+### Jest Test Example
+
+```javascript
+const request = require("supertest");
+const app = require("../server");
+
+describe("Auth API", () => {
+  it("should register a new user", async () => {
+    const res = await request(app)
+      .post("/api/auth/register")
+      .send({ name: "Test", email: "test@example.com", password: "secret123" });
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("token");
+  });
+});
+```
+
+## Architecture & Database Schema
+
+### System Architecture
+
+```
+Client (React) <-> Server (Node.js/Express) <-> Database (MongoDB)
+        ↑↓                    ↑↓
+    Socket.io-client       Socket.io
+(Real-time Updates)    (Real-time Engine)
+```
+
+### User Schema
+
+```javascript
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true, minlength: 6 },
+  avatar: { type: String, default: null },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+});
+```
+
+### Note Schema
+
+```javascript
+const noteSchema = new mongoose.Schema({
+  title: { type: String, required: true, default: "Untitled Note" },
+  content: { type: String, default: "" },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  shared: { type: Boolean, default: false },
+  shareLink: { type: String, unique: true, sparse: true },
+  sharePermission: { type: String, enum: ["view", "edit"], default: "view" },
+  permissions: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      role: {
+        type: String,
+        enum: ["viewer", "editor", "owner"],
+        default: "viewer",
+      },
+    },
+  ],
+  history: [
+    {
+      content: String,
+      updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      updatedAt: { type: Date, default: Date.now },
+    },
+  ],
+});
+```
+
+## 📡 Code Examples
+
+### Auth Routes
+
+```javascript
+router.post("/register", async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.status(201).json({ token });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+  res.json({ token });
+});
+```
+
+### Notes Routes
+
+```javascript
+router.get("/", auth, async (req, res) => {
+  const notes = await Note.find({ owner: req.user._id });
+  res.json(notes);
+});
+
+router.post("/", auth, async (req, res) => {
+  const note = new Note({ ...req.body, owner: req.user._id });
+  await note.save();
+  res.status(201).json(note);
+});
+
+router.put("/:id", auth, async (req, res) => {
+  const updated = await Note.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.json(updated);
+});
+
+router.delete("/:id", auth, async (req, res) => {
+  await Note.findByIdAndDelete(req.params.id);
+  res.json({ message: "Note deleted" });
+});
+```
+
+### Frontend API Helper
+
+```javascript
+export const apiRequest = async (
+  endpoint,
+  method = "GET",
+  data = null,
+  token = null
+) => {
+  const res = await fetch(`/api/${endpoint}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+    body: data ? JSON.stringify(data) : null,
+  });
+  if (!res.ok) throw new Error("API request failed");
+  return res.json();
+};
+```
+
+### Frontend Usage (React Component)
+
+```javascript
+import { useEffect, useState } from "react";
+import { apiRequest } from "./api";
+
+export default function NotesList({ token }) {
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    apiRequest("notes", "GET", null, token).then(setNotes);
+  }, [token]);
+
+  return (
+    <div>
+      <h2>Your Notes</h2>
+      {notes.map((note) => (
+        <div key={note._id}>
+          <h3>{note.title}</h3>
+          <p>{note.content}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## Screenshots & Demo
+
+### Screenshots
+
+_(screenshots here)_
+
+### Live Demo
+
+maybe yt link
