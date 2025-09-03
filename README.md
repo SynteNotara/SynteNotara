@@ -39,6 +39,7 @@ CollabNotes is a comprehensive note-taking solution built with the MERN stack (M
 - Socket.io-client for real-time features
 - Custom CSS with Tailwind CSS
 - React Toastify for notifications
+- GSAP for smooth and efficient animations
 
 **Backend:**
 
