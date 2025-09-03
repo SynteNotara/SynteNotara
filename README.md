@@ -461,4 +461,13 @@ export default function NotesList({ token }) {
 ### Some Screenshots
 
 Landing Page Hero section :
-![Hero](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Hero.PNG?raw=true)
+![Hero](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Hero%20Section.PNG?raw=true)
+
+Landing Page Features section :
+![Features](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Features.PNG?raw=true)
+
+Real-Time Collaboration :
+![Collaboration](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Collaboration.PNG?raw=true)
+
+Easily Add/Remove Collaborators :
+![Easy Management](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Manage.PNG?raw=true)
