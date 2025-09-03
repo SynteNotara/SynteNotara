@@ -24,7 +24,6 @@ A modern, full-stack MERN application using React, Tailwind, node, Socket.io, et
 
 SynteNotara is a comprehensive note-taking solution built with the MERN stack (MongoDB, Express.js, React, Node.js) that enables real-time collaboration between users. The application provides a seamless experience for teams to create, edit, and manage notes together with instant synchronization.
 
-# Project Evaluation
 
 ## User-Friendly Interface
 
