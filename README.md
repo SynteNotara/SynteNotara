@@ -456,12 +456,9 @@ export default function NotesList({ token }) {
 }
 ```
 
-## Screenshots & Demo
+## Screenshots
 
-### Screenshots
+### Some Screenshots
 
+Landing Page Hero section :
 ![Hero](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Hero.PNG?raw=true)
-
-### Live Demo
-
-maybe yt link
