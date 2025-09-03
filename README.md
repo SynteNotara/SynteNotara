@@ -257,17 +257,17 @@ const auth = async (req, res, next) => {
   JWT tokens, invalid permissions, and network interruptions
 - **Network/Server Downtime Fallbacks**:
   - Graceful degradation with "offline mode" indicators when the
-    API/server is unreachable\
-  - Retry strategies with exponential backoff for failed requests\
+    API/server is unreachable
+  - Retry strategies with exponential backoff for failed requests
   - Toast notifications to inform users of connection loss and
-    automatic reconnection attempts\
+    automatic reconnection attempts
 - **Exception Management**:
   - Extensive use of try...catch in controllers, services, and
-    socket events to prevent server crashes\
+    socket events to prevent server crashes
   - Validation errors are returned with detailed messages instead of
-    generic 500 errors\
+    generic 500 errors
   - Socket.io automatically re-establishes connections on disconnect
-    events\
+    events
 - **Logging**: Winston/Morgan used for backend logging, optional
   Sentry integration for error tracking
 
