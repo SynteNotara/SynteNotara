@@ -1,6 +1,7 @@
 # CollabNotes - Real-Time Collaborative Note-Taking App
 
 A modern, full-stack MERN application that enables teams to collaborate on notes in real-time with powerful features like document history, sharing, and role-based access control.
+sss
 
 ## Table of Contents
 
