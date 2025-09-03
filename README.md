@@ -25,46 +25,44 @@ A modern, full-stack MERN application using React, Tailwind, node, Socket.io, et
 SynteNotara is a comprehensive note-taking solution built with the MERN stack (MongoDB, Express.js, React, Node.js) that enables real-time collaboration between users. The application provides a seamless experience for teams to create, edit, and manage notes together with instant synchronization.
 
 ### Folder Structure
+
+
 project/
-
 ├── backend/
-│ ├── middleware/
-│ │ └── auth.js
-│ ├── models/
-│ │ ├── Note.js
-│ │ └── User.js
-│ ├── routes/
-│ │ ├── auth.js
-│ │ ├── notes.js
-│ │ └── users.js
-│ ├── package.json
-│ └── server.js
-
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── Note.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── notes.js
+│   │   └── users.js
+│   ├── package.json
+│   └── server.js
 ├── frontend/
-│ ├── public/
-│ │ └── index.html
-│ └── src/
-│ ├── App.css
-│ ├── App.js
-│ ├── components/
-│ │ ├── CollaboratorsModal.js
-│ │ ├── Header.js
-│ │ ├── Login.js
-│ │ ├── NoteEditor.js
-│ │ ├── NoteItem.js
-│ │ ├── Search.js
-│ │ ├── ShareButton.js
-│ │ ├── SharedNote.js
-│ │ └── Sidebar.js
-│ ├── index.js
-│ └── package.json
-
+│   ├── public/
+│   │   └── index.html
+│   └── src/
+│       ├── App.css
+│       ├── App.js
+│       ├── components/
+│       │   ├── CollaboratorsModal.js
+│       │   ├── Header.js
+│       │   ├── Login.js
+│       │   ├── NoteEditor.js
+│       │   ├── NoteItem.js
+│       │   ├── Search.js
+│       │   ├── ShareButton.js
+│       │   ├── SharedNote.js
+│       │   └── Sidebar.js
+│       ├── index.js
+│       └── package.json
 ├── ss/
-│ ├── Collaboration2.png
-│ ├── Features2.png
-│ ├── Hero Section2.png
-│ └── Manage2.png
-
+│   ├── Collaboration2.png
+│   ├── Features2.png
+│   ├── Hero Section2.png
+│   └── Manage2.png
 └── LandingPage.html
 
 ---
