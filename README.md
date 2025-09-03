@@ -271,6 +271,63 @@ const auth = async (req, res, next) => {
 - **Logging**: Winston/Morgan used for backend logging, optional
   Sentry integration for error tracking
 
+## Exception Handling
+
+- **Centralized Error Handling (Backend):**
+
+  - Implemented an Express middleware to catch and format errors into JSON responses.
+  - Differentiates between validation errors, JWT authentication errors, and unexpected server errors.
+  - Prevents server crashes by wrapping async routes with try...catch.
+
+- **React Error Boundaries (Frontend):**
+
+  - Error boundaries capture rendering errors and display a user-friendly fallback UI instead of breaking the whole app.
+  - Provides retry buttons or navigation to a safe page when an error occurs.
+
+- **Fallback UI Behaviors:**
+  - Offline indicators when the API/server is unreachable.
+  - Toast notifications for network interruptions with automatic reconnection attempts.
+  - Loading skeletons for smoother user experience during API requests.
+
+---
+
+## Testing & Maintenance
+
+- **Unit Testing:**
+
+  - Backend tested with **Jest** and **Supertest** for routes and controllers.
+  - Frontend tested with **React Testing Library** and **Jest** for component rendering and state management.
+
+- **Integration Tests:**
+
+  - Authentication flow, collaboration sessions, and role-based permissions tested to ensure reliability.
+
+- **Linting & Code Quality:**
+
+  - **ESLint** and **Prettier** ensure consistent code formatting and style.
+  - Git hooks (Husky) prevent committing code that fails lint/test checks.
+
+- **CI/CD Pipelines:**
+  - **GitHub Actions** runs automated tests, linting, and build checks on every pull request.
+  - Deployments can be automated to **Heroku** or **Vercel** for staging/production environments.
+
+---
+
+## Visual Aids in Documentation
+
+- **Architecture Diagram:**
+
+```
++-----------------+        +-------------------+        +----------------+
+|   React Client  | <----> |  Express.js API   | <----> |   MongoDB DB   |
+|  (Frontend UI)  |        | (Backend Server)  |        | (Data Storage) |
++-----------------+        +-------------------+        +----------------+
+         ↑                           ↑                          ↑
+         |                           |                          |
+   Socket.IO Client         Socket.IO Server             Mongoose ODM
+ (Real-Time Updates)     (Real-Time Collaboration)    (Schema & Queries)
+```
+
 ### Error Handling Middleware Example
 
 ```javascript
@@ -498,60 +555,3 @@ Real-Time Collaboration :
 
 Easily Add/Remove Collaborators :
 ![Easy Management](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Manage.PNG?raw=true)
-
-## 🛡️ Exception Handling
-
-- **Centralized Error Handling (Backend):**
-
-  - Implemented an Express middleware to catch and format errors into JSON responses.
-  - Differentiates between validation errors, JWT authentication errors, and unexpected server errors.
-  - Prevents server crashes by wrapping async routes with try...catch.
-
-- **React Error Boundaries (Frontend):**
-
-  - Error boundaries capture rendering errors and display a user-friendly fallback UI instead of breaking the whole app.
-  - Provides retry buttons or navigation to a safe page when an error occurs.
-
-- **Fallback UI Behaviors:**
-  - Offline indicators when the API/server is unreachable.
-  - Toast notifications for network interruptions with automatic reconnection attempts.
-  - Loading skeletons for smoother user experience during API requests.
-
----
-
-## 🧪 Testing & Maintenance
-
-- **Unit Testing:**
-
-  - Backend tested with **Jest** and **Supertest** for routes and controllers.
-  - Frontend tested with **React Testing Library** and **Jest** for component rendering and state management.
-
-- **Integration Tests:**
-
-  - Authentication flow, collaboration sessions, and role-based permissions tested to ensure reliability.
-
-- **Linting & Code Quality:**
-
-  - **ESLint** and **Prettier** ensure consistent code formatting and style.
-  - Git hooks (Husky) prevent committing code that fails lint/test checks.
-
-- **CI/CD Pipelines:**
-  - **GitHub Actions** runs automated tests, linting, and build checks on every pull request.
-  - Deployments can be automated to **Heroku** or **Vercel** for staging/production environments.
-
----
-
-## 🎨 Visual Aids in Documentation
-
-- **Architecture Diagram:**
-
-```
-+-----------------+        +-------------------+        +----------------+
-|   React Client  | <----> |  Express.js API   | <----> |   MongoDB DB   |
-|  (Frontend UI)  |        | (Backend Server)  |        | (Data Storage) |
-+-----------------+        +-------------------+        +----------------+
-         ↑                           ↑                          ↑
-         |                           |                          |
-   Socket.IO Client         Socket.IO Server             Mongoose ODM
- (Real-Time Updates)     (Real-Time Collaboration)    (Schema & Queries)
-```
