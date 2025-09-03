@@ -260,7 +260,7 @@ The project has a robust and well-structured backend.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Akmal-Ahmad/SynteNotara.git
+git clone https://github.com/SynteNotara/SynteNotara.git
 cd SynteNotara
 ```
 
