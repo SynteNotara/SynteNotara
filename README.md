@@ -18,7 +18,8 @@ A modern, full-stack MERN application that enables teams to collaborate on notes
 - [Testing & CI/CD](#testing--cicd)
 - [Architecture & Database Schema](#-architecture--database-schema)
 - [Code Examples](#-code-examples)
-- [Screenshots & Demo](#screenshots--demo)
+- [Screenshots](#screenshots)
+- [Rubric Analysis](#rubric-analysis)
 
 ## Overview
 
@@ -471,3 +472,25 @@ Real-Time Collaboration :
 
 Easily Add/Remove Collaborators :
 ![Easy Management](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Manage.PNG?raw=true)
+
+## Rubric-Analysis
+
+### User-friendly Interface
+
+This project has a strong focus on creating a user-friendly interface. Key aspects include:
+
+Clear and Clean Design: The use of Tailwind CSS and custom CSS variables for a defined color palette (--primary, --secondary, etc.)
+suggests a clean, modern aesthetic. The index.html file includes a hero section with a bold title and a clear call to action
+("Get Started"), which is excellant for user engagement.
+
+Intuitive Navigation: The navigation bar is simple and includes links to key sections like "Features," "How It Works," and "Pricing",
+making it easy for users to find information.
+
+Interactive Elements: The code incorporates animations using GSAP (GreenSock Animation Platform) and ScrollTrigger for elements like
+feature cards and the hero illustration. This adds a layer of visual feedback and can make the interface feel more dynamic and engaging.
+For example it has a slight lift and rotation on hover for note cards and a 3D perspective transform on the hero image.
+
+Actionable Feedback: The frontend uses a modal for managing collaborators and a toast notification system (react-toastify) to provide
+feedback on actions like sharing a note or removing a collaborator. This is amazing for guiding the user and confirming that their actions have been successful.
+
+Modern UI: The app interface is clear, modern and aesthetic, it is on par with the likes of google keep.
