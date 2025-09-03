@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabNotes - Real-Time Collaborative Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        /* Custom CSS variables for color palette */
+        :root {
+            --primary: #6366f1; 
+            --secondary: #8b5cf6; 
+            --accent: #ec4899; 
+            --dark: #1e293b; 
+            --light: #f8fafc; 
+        }
+        
+        /* Base body styles using Inter font and color variables */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevents horizontal scroll */
+            color: var(--dark);
+            background: var(--light);
+        }
+        
+        /* Utility class for a linear gradient background */
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        /* Utility class for a linear gradient text color */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text; /* Clips the background to the shape of the text */
+            -webkit-text-fill-color: transparent; /* Makes the text transparent so the background shows through */
+        }
+        
+        /* Custom box shadow class */
+        .custom-shadow {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Base styles for the feature cards with smooth transitions */
+        .note-card {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        /* Hover effect for the feature cards, slightly lifts and rotates them */
+        .note-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Styles for the feature icons, including size, shape, and alignment */
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Styles for the main hero image, including 3D perspective transform */
+        .hero-illustration {
+            border-radius: 20px;
+            transform: perspective(800px) rotateY(-10deg);
+            transition: transform 0.5s ease;
+        }
+        
+        /* Hover effect to straighten the hero illustration */
+        .hero-illustration:hover {
+            transform: perspective(800px) rotateY(0);
+        }
+        
+        /* Class for a floating animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Keyframes for the floating animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Styles for the cursor trail effect */
+        .cursor-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0;
+            pointer-events: none; /* Allows clicks to pass through */
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <nav class="fixed w-full z-50 py-4 px-6 bg-white bg-opacity-90 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                    <i class="fas fa-sticky-note text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold gradient-text">CollabNotes</span>
+            </div>
+            
+            <div class="hidden md:flex space-x-10">
+                <a href="#features" class="font-medium hover:text-indigo-600 transition-colors">Features</a>
+                <a href="#how-it-works" class="font-medium hover:text-indigo-600 transition-colors">How It Works</a>
+                <a href="#pricing" class="font-medium hover:text-indigo-600 transition-colors">Pricing</a>
+                <a href="#testimonials" class="font-medium hover:text-indigo-600 transition-colors">Testimonials</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <a href="http://localhost:3000/" class="px-5 py-2.5 rounded-full gradient-bg text-white font-medium hover:shadow-lg transition-shadow">Get Started</a>
+            </div>
+            
+            <button class="md:hidden text-gray-600">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="pt-32 lg:w-1/2 mb-16 lg:mb-0">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                        Write Together, <span class="gradient-text">Create Together</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-lg">
+                        CollabNotes enables teams to collaborate on notes in real-time with powerful features like document history, sharing, and role-based access.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="http://localhost:3000/" class="px-8 py-4 rounded-full gradient-bg text-white font-medium text-center hover:shadow-xl transition-shadow">
+                            Start Collaborating Now
+                        </a>
+                        <a href="#" class="px-8 py-4 rounded-full border border-gray-300 font-medium text-center hover:border-indigo-400 transition-colors">
+                            <i class="fas fa-play-circle mr-2 text-indigo-600"></i> Watch Demo
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="pb-5 lg:w-1/2 flex justify-center">
+                    <div class="relative w-full max-w-lg">
+                        <div class="absolute -top-10 -left-10 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+                        <div class="absolute -bottom-10 -right-10 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+                        <div class="relative">
+                            <div class="custom-shadow hero-illustration rounded-2xl overflow-hidden">
+                                <div class="bg-gradient-to-b from-indigo-100 to-purple-100 p-6">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <div class="flex space-x-2">
+                                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                        </div>
+                                        <div class="text-sm font-medium text-gray-600">Test Note</div>
+                                        <div class="w-6"></div>
+                                    </div>
+                                    
+                                    <div class="bg-white rounded-xl p-4 mb-3">
+                                        <div class="flex items-start">
+                                            <div class="w-8 h-8 gradient-bg rounded-full flex-shrink-0"></div>
+                                            <div class="ml-3">
+                                                <div class="font-medium">Shantanu Prasad <span class="text-xs text-green-600 ml-2">Editing</span></div>
+                                                <div class="text-gray-600 mt-1">I think we should focus on the mobile experience first, since most of our users are on mobile.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white rounded-xl p-4">
+                                        <div class="flex items-start">
+                                            <div class="w-8 h-8 bg-pink-500 rounded-full flex-shrink-0"></div>
+                                            <div class="ml-3">
+                                                <div class="font-medium">Raju Dalmia <span class="text-xs text-blue-600 ml-2">Suggesting</span></div>
+                                                <div class="text-gray-600 mt-1">What about adding a dark mode? Many users have requested this feature.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3 flex items-center">
+                                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center custom-shadow">
+                                            <i class="fas fa-plus text-indigo-600"></i>
+                                        </div>
+                                        <div class="ml-3 text-sm text-gray-600">Add a comment...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="features" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Powerful Features for Seamless Collaboration</h2>
+                <p class="text-gray-600">CollabNotes brings everything together in one place so your team can collaborate without missing a beat.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl custom-shadow note-card">
+                    <div class="feature-icon gradient-bg">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Real-Time Collaboration</h3>
+                    <p class="text-gray-600">See edits as they happen. Multiple people can work on the same note simultaneously.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow note-card">
+                    <div class="feature-icon bg-pink-500">
+                        <i class="fas fa-history text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Document History</h3>
+                    <p class="text-gray-600">Track changes and revert to any previous version with our comprehensive version history.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow note-card">
+                    <div class="feature-icon bg-green-500">
+                        <i class="fas fa-share-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Easy Sharing</h3>
+                    <p class="text-gray-600">Share notes with anyone via email. Control access with view, or edit permissions.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow note-card">
+                    <div class="feature-icon bg-blue-500">
+                        <i class="fas fa-lock text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Role-Based Access</h3>
+                    <p class="text-gray-600">Assign roles to control what team members can see and do within your notes and documents.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow note-card">
+                    <div class="feature-icon bg-yellow-500">
+                        <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Mobile Optimized</h3>
+                    <p class="text-gray-600">Work from anywhere with our mobile-first approach. Perfect for on-the-go note taking.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow note-card">
+                    <div class="feature-icon bg-purple-500">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Advanced Search</h3>
+                    <p class="text-gray-600">Find anything in seconds with our powerful search that scans through all your notes and documents.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="how-it-works" class="py-20 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">How CollabNotes Works</h2>
+                <p class="text-gray-600">Getting started with CollabNotes is simple. Here's how you can transform your team collaboration.</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                <div class="lg:w-5/12 mb-10 lg:mb-0">
+                    <div class="flex items-start mb-8">
+                        <div class="text-4xl font-bold gradient-text mr-6">01</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Create a Note</h3>
+                            <p class="text-gray-600">Start a new note from scratch or choose a note from sidebar.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start mb-8">
+                        <div class="text-4xl font-bold gradient-text mr-6">02</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Invite Your Team</h3>
+                            <p class="text-gray-600">Share your note with team members and set their access level (view or edit).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="text-4xl font-bold gradient-text mr-6">03</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Collaborate in Real-Time</h3>
+                            <p class="text-gray-600">Work together simultaneously, see changes as they happen, and never worry about version control again.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-6/12">
+                    <div class="relative">
+                        <div class="absolute -inset-4 border-2 border-dashed border-indigo-200 rounded-2xl rotate-3"></div>
+                        <div class="relative gradient-bg rounded-2xl p-8 text-white">
+                            <div class="flex items-center mb-8">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">Create your first note</h3>
+                                    <p class="text-indigo-100">It's quick and easy to get started</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white bg-opacity-10 rounded-xl p-4 mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-medium">Team Meeting Notes</div>
+                                    <div class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">Editing</div>
+                                </div>
+                                <p class="text-sm text-indigo-100">Created 2 hours ago • 3 collaborators</p>
+                            </div>
+                            
+                            <div class="bg-white bg-opacity-10 rounded-xl p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-medium">Project Ideas</div>
+                                    <div class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">Viewing</div>
+                                </div>
+                                <p class="text-sm text-indigo-100">Created yesterday • 5 collaborators</p>
+                            </div>
+                            
+                            <div class="mt-6 flex justify-center">
+                                <div class="w-12 h-1 bg-white bg-opacity-20 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="testimonials" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">What Our Users Say</h2>
+                <p class="text-gray-600">Join thousands of satisfied users who have transformed their collaboration with CollabNotes.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl custom-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 gradient-bg rounded-full"></div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Ankush Singh</h4>
+                            <p class="text-gray-500">Product Manager</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"CollabNotes has completely transformed how our remote team works together. The real-time collaboration is seamless."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-pink-500 rounded-full"></div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Sushanta Paul</h4>
+                            <p class="text-gray-500">Software Engineer</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"The document history feature is a lifesaver. We never have to worry about losing important changes anymore."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl custom-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full"></div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Radhika Sharma</h4>
+                            <p class="text-gray-500">Marketing Director</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Sharing notes with clients has never been easier. The role-based access control gives us complete peace of mind."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="py-20 px-6 gradient-bg">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Team's Collaboration?</h2>
+            <p class="text-indigo-100 mb-10 max-w-2xl mx-auto">Join thousands of teams that use CollabNotes to create, share, and collaborate on notes in real-time.</p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="http://localhost:3000/" class="px-8 py-4 rounded-full bg-white text-indigo-600 font-medium hover:shadow-xl transition-shadow">Get Started for Free</a>
+                <a href="#" class="px-8 py-4 rounded-full bg-white bg-opacity-20 text-white font-medium hover:bg-opacity-30 transition-colors">Schedule a Demo</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="py-12 px-6 bg-gray-900 text-gray-400">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+                <div class="lg:col-span-2">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                            <i class="fas fa-sticky-note text-white text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-white">CollabNotes</span>
+                    </div>
+                    <p class="max-w-xs">The modern way for teams to collaborate on notes and documents in real-time.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-medium mb-6">Product</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Templates</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Integrations</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-medium mb-6">Resources</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Guides</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Webinars</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Docs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-medium mb-6">Company</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p>© 2023 CollabNote. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize GSAP animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Hero section animations
+            gsap.from('.hero-illustration', {
+                duration: 1.5,
+                y: 100,
+                opacity: 0,
+                ease: 'power3.out'
+            });
+            
+            gsap.from('nav', {
+                duration: 1,
+                y: -50,
+                opacity: 0,
+                ease: 'power3.out'
+            });
+            
+            gsap.to('.floating', {
+                y: 20,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power1.inOut'
+            });
+            
+            // Feature cards animation triggered by scroll
+            gsap.utils.toArray('.note-card').forEach(card => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none' // Play animation once when triggered
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+            
+            // "How it works" section animation
+            gsap.utils.toArray('#how-it-works .flex.items-start').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none'
+                    },
+                    x: i % 2 === 0 ? -50 : 50, // Animate from left for even items, right for odd
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: i * 0.2, // Staggered animation delay
+                    ease: 'power2.out'
+                });
+            });
+            
+            // Testimonial card animations
+            gsap.utils.toArray('#testimonials .bg-white').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none'
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: i * 0.2, // Staggered animation delay
+                    ease: 'power2.out'
+                });
+            });
+            
+            // Create cursor trail effect
+            document.addEventListener('mousemove', function(e) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.left = e.pageX - 4 + 'px';
+                trail.style.top = e.pageY - 4 + 'px';
+                document.body.appendChild(trail);
+                
+                gsap.to(trail, {
+                    duration: 0.5,
+                    opacity: 0.3,
+                    scale: 2,
+                    onComplete: () => {
+                        document.body.removeChild(trail);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
