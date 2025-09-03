@@ -350,7 +350,7 @@ const noteSchema = new mongoose.Schema({
 });
 ```
 
-## 📡 Code Examples
+## Code Examples
 
 ### Auth Routes
 
