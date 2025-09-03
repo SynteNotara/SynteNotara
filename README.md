@@ -460,7 +460,7 @@ export default function NotesList({ token }) {
 
 ### Screenshots
 
-_(screenshots here)_
+![Hero](https://github.com/Akmal-Ahmad/CollabNotes/blob/main/ss/Hero.PNG?raw=true)
 
 ### Live Demo
 
