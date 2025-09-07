@@ -66,7 +66,7 @@ const Login = ({ setUser, setNotes }) => {
     <div className="login-container">
       <div className="login-form">
         {/* Title and subtitle that change based on whether it's login or register mode. */}
-        <h2>Welcome to CollabNotes</h2>
+        <h2>Welcome to SynteNotara</h2>
         <p>{isLogin ? 'Sign in to access your notes' : 'Create a new account'}</p>
         
         {/* Displays an error message if the error state is not empty. */}
